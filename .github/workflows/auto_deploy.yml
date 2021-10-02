@@ -1,32 +1,33 @@
 # This is a basic workflow to help you get started with Actions
+
 name: Deploy Website
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-on: [push]
+# events but only for the development branch
+on:
+  push:
+    branches: [ main ]
 
-# A workflow run in made up of one or more jobs that can run sequentially or in parallel.
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  
   # This workflow contains a single job called "build"
-  build:  
-    name: Deploying to surge
+  build:
+    # The type of runner that the job will run on
     runs-on: windows-latest
-    
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-        
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it.
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        
-        
-      - name: Install Node.js
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: 12
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Install NodeJs
+      uses: actions/setup-node@v2-beta
+      with: 
+        node-version: 12
       
-      - name: Install Surge
-        run: npm install -g surge
-        
-      - name: Run surge
-        run: surge ./ https://bootcamp_class01.surge.sh --token ${{ secrets.SURGE_TOKEN}}
+    - name: Install Surge
+      run: npm install --global surge
+    
+    - name: Deploy to surge
+      run: surge ./ https://bootcamp_class01.surge.sh --token ${{ secrets.SURGE_TOKEN}}
